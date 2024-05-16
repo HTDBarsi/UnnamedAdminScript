@@ -80,10 +80,10 @@ function findCommand(txt)
 end
 
 function getPlayer(name)
-	for i,v in pairs(game.Players:GetPlayers()) do 
-		print(string.sub(v.Name,1,#name),string.sub(v.DisplayName,1,#name),name)
-		if string.lower(string.sub(v.Name,1,#name)) == string.lower(name) or 
-			string.lower(string.sub(v.DisplayName,1,#name)) == string.lower(name) then
+	if #name == 0 then return end
+	for i,v in pairs(game.Players:GetPlayers()) do
+		if string.lower(string.sub(v.Name,1,#name)) == string.lower(name) or string.lower(string.sub(v.DisplayName,1,#name)) == string.lower(name) then
+			print(v)
 			return v
 		end
 	end
@@ -144,11 +144,24 @@ end)
 AddReference("walkspeed", "ws")
 AddReference("walkspeed", "speed")
 
+-- unwalkspeed --
+addCommand("unwalkspeed","remove WalkSpeed", function(data)
+	plr.Character.Humanoid.WalkSpeed = 16
+end)
+AddReference("unwalkspeed", "unws")
+AddReference("unwalkspeed", "unspeed")
+
 -- jumppower --
 addCommand("jumppower","JumpPower [amount]", function(data)
 	plr.Character.Humanoid.JumpPower = tonumber(data[2]) or 50
 end)
 AddReference("jumppower", "jp")
+
+-- unjumppower -- 
+addCommand("unjumppower","UnJumpPower", function(data)
+	plr.Character.Humanoid.JumpPower = 50
+end)
+AddReference("unjumppower", "unjp")
 
 -- forcejump -- 
 addCommand("forcejump","ForceJump", function(data)
@@ -188,6 +201,12 @@ addCommand("spectate", "Spectate [plr]", function(data)
 end)
 AddReference("spectate", "view")
 
+-- unview plr --
+addCommand("unspectate", "Unspectate", function(data)
+	workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+end)
+AddReference("unspectate","unview")
+
 -- anchor self --
 addCommand("selfanchor", "SelfAnchor", function(data)
 	plr.Character.HumanoidRootPart.Anchored = not plr.Character.HumanoidRootPart.Anchored
@@ -207,7 +226,7 @@ end)
 
 -- btools --
 addCommand("btools", "BuilderTools", function(data)
-	 Instance.new("HopperBin",plr.Backpack).BinType = "Clone"
+	Instance.new("HopperBin",plr.Backpack).BinType = "Clone"
 	Instance.new("HopperBin",plr.Backpack).BinType = "Hammer"
 	Instance.new("HopperBin",plr.Backpack).BinType = "Grab"
 end)
@@ -274,6 +293,26 @@ AddReference("flyspeed", "fspeed")
 addCommand("unfly", "unFly", function()
 	flying = false
 end)
+
+-- animation stealer --
+addCommand("stealanimations", "Stealanimations [plr]", function(data)
+	local target = getPlayer(data[2])
+	if not target or not target.Character or not plr.Character:FindFirstChild("LowerTorso") then workspace.CurrentCamera.CameraSubject = plr.Character.Humanoid return end
+	for i,v in pairs(plr.Character.Animate:GetChildren()) do 
+		if v:IsA("StringValue") then v:Destroy() end
+	end
+	for i,v in pairs(target.Character.Animate:GetChildren()) do 
+		v:Clone().Parent = plr.Character.Animate
+	end
+end)
+AddReference("stealanimations", "stealanims")
+AddReference("stealanimations", "copyanims")
+
+-- exit --
+addCommand("exit", "Exit", function(data)
+	ScreenGui:Destroy()
+end)
+AddReference("exit","quit")
 
 -- debug --
 addCommand("print", "Print stuff ig", function(data)
