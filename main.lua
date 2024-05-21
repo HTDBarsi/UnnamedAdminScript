@@ -7,7 +7,7 @@ local Example = Instance.new("TextLabel")
 
 TextBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 TextBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextBox.Position = UDim2.new(1, -200, 1, -20)
+TextBox.Position = UDim2.new(0, 0, 1, -20) -- main pos
 TextBox.Size = UDim2.new(0, 200, 0, 20)
 TextBox.Font = Enum.Font.Ubuntu
 TextBox.Text = ""
@@ -307,6 +307,17 @@ addCommand("stealanimations", "Stealanimations [plr]", function(data)
 end)
 AddReference("stealanimations", "stealanims")
 AddReference("stealanimations", "copyanims")
+
+-- antibang --
+addCommand("antibang", "antibang", function(data)
+	local oldpos = plr.Character.HumanoidRootPart.CFrame
+	workspace.FallenPartsDestroyHeight = -10000
+	plr.Character.HumanoidRootPart.CFrame = CFrame.new(Vector3.new(0,-500,0))
+	task.wait(2.5)
+	plr.Character.HumanoidRootPart.CFrame = oldpos
+	workspace.FallenPartsDestroyHeight = -500
+end)
+AddReference("antibang", "unbang")
 
 -- exit --
 addCommand("exit", "Exit", function(data)
